@@ -34,8 +34,12 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+   // Get the title from the request URL (space in title = %20)
+  const title = req.params.title.toLowerCase();
+  // Filter the books array to find books matching the extracted author parameter
+  // should really use a regex here
+  let books_array = Object.values(books).filter((book) => book.title.toLowerCase() === title);
+  res.send(JSON.stringify(books_array,null,4));
 });
 
 //  Get book review
