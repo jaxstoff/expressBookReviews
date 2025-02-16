@@ -47,11 +47,11 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',function (req, res) {
     // get a book based on ISBN (we don't have real ISBNs - this is just the key)
     const isbn = req.params.isbn;
-    
+    console.log(books[isbn]);
     if(!books[isbn])
         res.status(404).json({message: `No books found with ISBN ${isbn}`});
     else
-        res.status(200).json(books[isbn]);
+        res.status(200).json(books["1"]);
  });
   
 // Get book details based on author
