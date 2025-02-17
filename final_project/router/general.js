@@ -46,12 +46,12 @@ public_users.get('/',function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     // get a book based on ISBN (we don't have real ISBNs - this is just the key)
-    const isbn = req.params.isbn;
+    const isbn = req.params.isbn+"";
     console.log(books[isbn]);
     if(!books[isbn])
         res.status(404).json({message: `No books found with ISBN ${isbn}`});
     else
-        res.status(200).json(books["1"]);
+        res.status(200).json(books[isbn]);
  });
   
 // Get book details based on author
@@ -107,14 +107,29 @@ public_users.get('/task10',function (req, res) {
         else
             reject("No book data");
     })
-    .then(console.log("Task 10 - Promises success"))
+    .then(() => console.log("Task 10 - Promises success"))
     .catch((error) => { 
-        console.error(error); // "The operation failed!"
+        console.error(error); // "No book data or something else broke"
         res.status(404).json({ message: `${error}` });
       });
 });
 
 // Task 11 - Book details by ISBN using promises
+public_users.get('/task11/isbn/:isbn', function (req, res) {
+    // get a book based on ISBN 
+    let thebook = new Promise((resolve, reject) => {
+        const isbn = req.params.isbn + "";
+        if (books[isbn])
+            resolve(res.status(200).json(books[isbn]));
+        else
+            reject(`Book with ISBN ${isbn} not found`);
+        })
+        .then(() => console.log("Task 11 - Promises success"))
+        .catch((error) => {
+            console.error(error); // "No book found"
+            res.status(404).json({ message: `${error}` });
+        });
+    });
 
 // Task 12 - Book details by Author using promises
 
