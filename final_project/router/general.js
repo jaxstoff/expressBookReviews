@@ -98,4 +98,26 @@ public_users.get('/review/:isbn',function (req, res) {
 
 });
 
+// Task 10 - List of Books using promises 
+public_users.get('/task10',function (req, res) {
+    // get list of books in json using promises
+    let booklist = new Promise((resolve,reject) => {
+        if (books)
+            resolve(res.send(JSON.stringify(books,null,4)));
+        else
+            reject("No book data");
+    })
+    .then(console.log("Task 10 - Promises success"))
+    .catch((error) => { 
+        console.error(error); // "The operation failed!"
+        res.status(404).json({ message: `${error}` });
+      });
+});
+
+// Task 11 - Book details by ISBN using promises
+
+// Task 12 - Book details by Author using promises
+
+// Task 13 - Book details by Title using promises
+
 module.exports.general = public_users;
