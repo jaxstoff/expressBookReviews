@@ -58,34 +58,46 @@ regd_users.post("/login", (req,res) => {
 });
 
 // Add a book review
-//regd_users.put("/auth/review/:isbn", (req, res) => {
-  // a review needs: review author, review, previous reviews,
-  
- // 3. save review
-regd_users.get("/auth/review/:isbn", (req, res) => {
+regd_users.put("/auth/review/:isbn", (req, res) => {
+    const review_text = req.query.review; // review as query parameter
+    const isbn = req.params.isbn + "";       // book isbn
     let token = req.session.authorization;
-    let username = token["username"];
-    let reviews = [];
-    const isbn = req.params.isbn;
+    let username = token["username"];   // username for review
+    if (!review_text)
+        return res.status(404).json({ message: `No review to add/update.` });
+    
     if (isbn) {
         if (!books[isbn])
-            res.status(404).json({ message: `No books found with ISBN ${isbn}` });
+            return res.status(404).json({ message: `Unable to find a book with ISBN ${isbn}` });
         else {
-            let review_list = books[isbn]["reviews"];
-            //if(Object.keys(review_list).length !== 0)
-            //    reviews.push(books[isbn]["reviews"]);
-
-            if (review_list.length == 0)
-                res.status(404).json({ message: `No reviews found for ISBN ${isbn}` });
-            else {
-                let found_review = review_list.filter((revw) => revw.username === username);
-                res.status(200).json(found_review);
-            }
-                //res.status(200).json(review_list);
-        }
+            // if there's no review it gets added. If it exists it gets updated.
+            books[isbn].reviews[username] = review_text;
+            console.log(books[isbn].reviews[username]);
+            // return whole book data or just that the review was added?
+            return res.status(200).json({ message: `The review for the book with ISBN ${isbn} has been added/updated` });
+         }
     } else {
         res.status(404).json({ message: `Missing parameter ISBN: ${isbn}` });
     }
+
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn + "";       // book isbn
+    let token = req.session.authorization;
+    let username = token["username"];   // username for review
+    if (isbn) {
+        if (!books[isbn])
+            return res.status(404).json({ message: `Unable to find a book with ISBN ${isbn}` });
+        else {
+            let filtered_review = books[isbn]["reviews"];
+
+             }
+    } else {
+        res.status(404).json({ message: `Missing parameter ISBN: ${isbn}` });
+    }
+
+
 });
 
 module.exports.authenticated = regd_users;
