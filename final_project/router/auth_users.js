@@ -90,14 +90,18 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
         if (!books[isbn])
             return res.status(404).json({ message: `Unable to find a book with ISBN ${isbn}` });
         else {
-            let filtered_review = books[isbn]["reviews"];
-
-             }
+            let book_reviews = books[isbn]["reviews"];
+            if (book_reviews[username]) {
+                console.log(`reviews: ${book_reviews[username]}`);
+                delete book_reviews[username];
+                return res.send({ message: `Reviews for the ISBN  ${isbn} posted by the user ${username} deleted.`});
+            } else {
+                return res.send({ message: `There are no reviews for this ISBN ${isbn} posted by the user ${username} to delete.`});
+            }
+        }
     } else {
         res.status(404).json({ message: `Missing parameter ISBN: ${isbn}` });
     }
-
-
 });
 
 module.exports.authenticated = regd_users;
