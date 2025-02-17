@@ -132,7 +132,39 @@ public_users.get('/task11/isbn/:isbn', function (req, res) {
     });
 
 // Task 12 - Book details by Author using promises
+public_users.get('/task12/author/:author',function (req, res) {
+    let booksbyauthor = new Promise((resolve,reject) => {
+        const author = req.params.author.toLowerCase(); // case insensitive!    
+        // Filter the books array to find books matching the extracted author parameter
+        let books_array = Object.values(books).filter((book) => book.author.toLowerCase() === author);
+        if(books_array.length > 0)
+            resolve(res.status(200).json(books_array));
+        else
+            reject(`No books by ${author} found`);
+    })
+    .then(() => console.log("Task 12 - Promises success"))
+    .catch((error) => { 
+        console.error(error); 
+        res.status(404).json({ message: `${error}` });
+      });
+  });
 
 // Task 13 - Book details by Title using promises
+public_users.get('/task13/title/:title',function (req, res) {
+    let booksbytitle = new Promise((resolve,reject) => {
+        const title = req.params.title.toLowerCase().trim();
+        // Filter the books array to find books matching the extracted title parameter
+        let books_array = Object.values(books).filter((book) => book.title.toLowerCase() === title);
+        if(books_array.length > 0)
+            resolve(res.status(200).json(books_array));
+        else
+            reject(`No books with title "${title}" found`);
+    })
+    .then(() => console.log("Task 13 - Promises success"))
+    .catch((error) => { 
+        console.error(error); 
+        res.status(404).json({ message: `${error}` });
+      });  
+ });
 
 module.exports.general = public_users;
